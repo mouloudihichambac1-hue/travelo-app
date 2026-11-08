@@ -1,0 +1,2 @@
+INSERT INTO flight (departure_city, departure_airport, arrival_city, arrival_airport, date, departure_time, arrival_time, company, price) 
+VALUES ('Rabat', 'RBA', 'Paris', 'CDG', '2026-06-15', '10:30:00', '14:00:00', 'Royal Air Maroc', 1500.00);

@@ -11,7 +11,7 @@ import org.springframework.stereotype.Repository;
 import com.example.travelo_backend.model.Flight;
 
 @Repository
-public interface FlightRepository extends JpaRepository<Flight, Long> {
+public interface FlightRepository extends JpaRepository<Flight, Integer> {
 
     @Query("SELECT f FROM Flight f " +
            "WHERE (f.departureCity = :from OR f.departureAirport = :from) " +

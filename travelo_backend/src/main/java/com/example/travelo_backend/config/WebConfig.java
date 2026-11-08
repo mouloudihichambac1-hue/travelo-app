@@ -13,10 +13,10 @@ public class WebConfig {
         return new WebMvcConfigurer() {
             @Override
             public void addCorsMappings(@NonNull CorsRegistry registry) {
-                registry.addMapping("/**") // Apply to all endpoints
-                        .allowedOrigins("http://frontend.exam.local") // React frontend URL
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allowed methods
-                        .allowedHeaders("*") // Allow all headers
+                registry.addMapping("/**")
+                        .allowedOriginPatterns("*") // Utiliser allowedOriginPatterns avec allowCredentials(true)
+                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedHeaders("*")
                         .allowCredentials(true);
             }
         };

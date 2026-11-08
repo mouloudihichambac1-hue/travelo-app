@@ -1,0 +1,70 @@
+version: '3.8'
+
+services:
+  database:
+    image: localhost:5000/travelo-db:v1
+    environment:
+      - MYSQL_ROOT_PASSWORD=waaASEDS
+      - MYSQL_DATABASE=travelo_db
+    networks:
+      - travelo-swarm-network
+    deploy:
+      replicas: 1
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+      restart_policy:
+        condition: on-failure
+
+  backend:
+    image: localhost:5000/travelo-backend:v1
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:mysql://database:3306/travelo_db
+      - SPRING_DATASOURCE_USERNAME=root
+      - SPRING_DATASOURCE_PASSWORD=waaASEDS
+    networks:
+      - travelo-swarm-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.50'
+          memory: '512M'
+      restart_policy:
+        condition: on-failure
+
+  frontend:
+    image: localhost:5000/travelo-frontend:v1
+    networks:
+      - travelo-swarm-network
+    deploy:
+      replicas: 2
+      resources:
+        limits:
+          cpus: '0.25'
+          memory: '256M'
+      restart_policy:
+        condition: on-failure
+
+  reverse-proxy:
+    image: nginx:alpine
+    ports:
+      - "80:80"
+      - "8080:8080"
+      - "3306:3306"
+    configs:
+      - source: nginx_config
+        target: /etc/nginx/nginx.conf
+    networks:
+      - travelo-swarm-network
+    deploy:
+      replicas: 1
+
+configs:
+  nginx_config:
+    file: ./nginx.conf
+
+networks:
+  travelo-swarm-network:
+    driver: overlay

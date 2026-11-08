@@ -22,8 +22,8 @@ public class SeatController {
     private SeatRepository seatRepository;
 
     @GetMapping("/{flightId}")
-    public ResponseEntity<Map<String, String>> getSeats(@PathVariable Long flightId) {
-        Seat seat = seatRepository.findById(flightId)
+    public ResponseEntity<Map<String, String>> getSeats(@PathVariable Integer flightId) {
+        Seat seat = seatRepository.findByFlight_IdFlight(flightId)
                 .orElseThrow(() -> new RuntimeException("Seat not found for flightId: " + flightId));
 
         Map<String, String> seatData = new HashMap<>();

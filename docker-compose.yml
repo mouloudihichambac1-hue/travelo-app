@@ -1,0 +1,40 @@
+version: '3.8'
+
+services:
+  database:
+    image: localhost:5000/travelo-db:v1
+    container_name: travelo-db
+    environment:
+      MYSQL_ROOT_PASSWORD: waaASEDS
+      MYSQL_DATABASE: travelo_db
+    volumes:
+      - db-data:/var/lib/mysql
+    networks:
+      - travelo-network
+
+  backend:
+    image: localhost:5000/travelo-backend:v1
+    container_name: travelo-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - travelo-network
+
+  frontend:
+    image: localhost:5000/travelo-frontend:v1
+    container_name: travelo-frontend
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+    networks:
+      - travelo-network
+
+networks:
+  travelo-network:
+    driver: bridge
+
+volumes:
+  db-data:

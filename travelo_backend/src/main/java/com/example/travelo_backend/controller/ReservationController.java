@@ -37,39 +37,39 @@ public class ReservationController {
     }
     @PostMapping("/reserve")
     public ResponseEntity<String> reserveSeat(@RequestBody ReservationDto reservationDto) {
-        Long flightId = reservationDto.getFlightId();
+        if (reservationDto == null || reservationDto.getFlightId() == null || reservationDto.getSeatName() == null
+                || reservationDto.getPassenger() == null) {
+            return new ResponseEntity<>("Invalid reservation payload", HttpStatus.BAD_REQUEST);
+        }
+
+        Integer flightId = reservationDto.getFlightId();
         String seatName = reservationDto.getSeatName();
         Passenger passenger = reservationDto.getPassenger();
 
-        // Save passenger
         Passenger savedPassenger = passengerRepository.save(passenger);
 
-        // Update seat status
-        Seat seat = seatRepository.findById(flightId)
+        Seat seat = seatRepository.findByFlight_IdFlight(flightId)
                 .orElseThrow(() -> new RuntimeException("Seat not found for flightId: " + flightId));
 
         try {
-            Field seatField = seat.getClass().getDeclaredField(seatName);
+            Field seatField = Seat.class.getDeclaredField(seatName);
             seatField.setAccessible(true);
 
-            // Check seat availability
             String seatStatus = (String) seatField.get(seat);
             if ("taken".equalsIgnoreCase(seatStatus)) {
                 return new ResponseEntity<>("Seat already taken", HttpStatus.CONFLICT);
             }
 
-            // Mark seat as taken
             seatField.set(seat, "taken");
             seatRepository.save(seat);
         } catch (NoSuchFieldException | IllegalAccessException e) {
             return new ResponseEntity<>("Invalid seat name", HttpStatus.BAD_REQUEST);
         }
 
-        // Save reservation
         Reservation reservation = new Reservation();
         reservation.setPassenger(savedPassenger);
         reservation.setFlight(flightRepository.findById(flightId)
-                .orElseThrow(() -> new RuntimeException("Flight not found")));
+                .orElseThrow(() -> new RuntimeException("Flight not found: " + flightId)));
         reservation.setSeat(seatName);
         reservationRepository.save(reservation);
 

@@ -3,17 +3,17 @@ package dto;
 import com.example.travelo_backend.model.Passenger;
 
 public class ReservationDto {
-    private Long flightId;
+    private Integer flightId;
     private String seatName;
     private Passenger passenger;
 
     // Getters and setters
 
-    public Long getFlightId() {
+    public Integer getFlightId() {
         return flightId;
     }
 
-    public void setFlightId(Long flightId) {
+    public void setFlightId(Integer flightId) {
         this.flightId = flightId;
     }
 
