@@ -1,0 +1,19 @@
+apiVersion: pxc.percona.com/v1
+kind: PerconaXtraDBCluster
+metadata:
+  name: travelo-db-cluster
+  namespace: travelo
+spec:
+  crVersion: 1.14.0
+  pxc:
+    size: 3
+    image: percona/percona-xtradb-cluster:8.0.32-24
+    volumeSpec:
+      persistentVolumeClaim:
+        resources:
+          requests:
+            storage: 2Gi
+  haproxy:
+    enabled: true
+    size: 2
+    

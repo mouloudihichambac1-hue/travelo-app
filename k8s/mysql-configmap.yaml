@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-configmap
+  namespace: travelo
+data:
+  MYSQL_DATABASE: "travelo_db"
